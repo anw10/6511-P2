@@ -3,9 +3,9 @@ from datetime import datetime
 
 
 #read & create board with queens
-board = np.zeros((25,25),dtype=int)
+board = np.zeros((1000,1000),dtype=int)
 n = board.shape[0]
-np.set_printoptions(linewidth=200)
+np.set_printoptions(linewidth=2000)
 
 rows_dont=[]
 
@@ -16,6 +16,10 @@ rows_dont=[]
 #             board[r_idx][int(line.rstrip())-1] = 1
 #             r_idx += 1
 # sol_board = np.zeros((10,10),dtype=int)
+
+def print_sol(board):
+    board[board == 8] = 0
+    np.savetxt('sol'+str(n)+".txt", board.copy(), fmt='%i')
 
 def check_no_attack(queen):
     x,y = queen
@@ -79,16 +83,15 @@ def check_no_attack(queen):
 def csp_search(board, row_idx):
 
     if row_idx == -1:
+        print_sol(board.copy())
         print(board.copy(), "FINAL")
         return True
     
-    #just go top down row by row bt
+    #bt+mrv, next row chosen is the one with the least amount of cols left safe for placement(the fewest legal values(spaces) left for the variable(row))
     for idx, j in np.ndenumerate(board[row_idx]):
         if(check_no_attack((row_idx,) + idx) == True):
             board[row_idx][idx] = 1
             rows_dont.append(row_idx)
-            # print(board)
-            # print(row_idx)
             mrr = mrv_row(board)
 
             if(csp_search(board, mrr)):
@@ -98,13 +101,12 @@ def csp_search(board, row_idx):
     
     return False
 
+#Minimum remaining value heuristic, the next row to visit is the one with the least amount of safe space available for placing a queen
 def mrv_row(board):
     temp_board = board.copy()
-    # print((temp_board == 8).sum(axis=1))
+
     max_fights = np.sum(temp_board == 8, axis=1)
     rd_nump = np.array(rows_dont)
-    # print(max_fights)
-    # print(rd_nump)
 
     val_max = -1
     idx_max = -1
@@ -116,10 +118,6 @@ def mrv_row(board):
     
     return idx_max
  
-
-
-def heu_cal():
-    print()
 
 def ac_3():
     print()
