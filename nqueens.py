@@ -1,3 +1,9 @@
+"""
+Nqueens as a CSP
+Author: Arsalan Bin Najeeb
+
+"""
+
 import numpy as np
 from datetime import datetime
 from queue import PriorityQueue
@@ -37,6 +43,7 @@ def print_sol(board):
 ######################################################
 
 
+# Checks if placed queen on the board is in postion to attack any other queen + also implements a version of forward checking where I mark places on the board that are being attacked
 def check_no_attack(queen):
     x, y = queen
 
